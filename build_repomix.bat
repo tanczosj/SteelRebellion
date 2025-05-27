@@ -1,0 +1,1 @@
+repomix --include "./SteelRebellion/**/*.cs" --output "repomix.md"

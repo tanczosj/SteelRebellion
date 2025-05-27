@@ -10,6 +10,9 @@ namespace Unity.FPS.AI
         public int NumberOfEnemiesTotal { get; private set; }
         public int NumberOfEnemiesRemaining => Enemies.Count;
 
+        public GameObject objectToDeactivate; // The GameObject you want to deactivate
+        public GameObject objectToActivate;   // The GameObject you want to activate
+
         void Awake()
         {
             Enemies = new List<EnemyController>();
@@ -18,7 +21,6 @@ namespace Unity.FPS.AI
         public void RegisterEnemy(EnemyController enemy)
         {
             Enemies.Add(enemy);
-
             NumberOfEnemiesTotal++;
         }
 
@@ -31,8 +33,20 @@ namespace Unity.FPS.AI
             evt.RemainingEnemyCount = enemiesRemainingNotification;
             EventManager.Broadcast(evt);
 
-            // removes the enemy from the list, so that we can keep track of how many are left on the map
+            // Remove the enemy from the list
             Enemies.Remove(enemyKilled);
+
+            // Deactivate the object when only 1 enemy remains
+            if (NumberOfEnemiesRemaining == 1 && objectToDeactivate != null)
+            {
+                objectToDeactivate.SetActive(false); // Deactivate the object
+            }
+
+            // Reactivate the object when no enemies remain
+            if (NumberOfEnemiesRemaining == 0 && objectToActivate != null)
+            {
+                objectToActivate.SetActive(true); // Activate the object
+            }
         }
     }
 }
